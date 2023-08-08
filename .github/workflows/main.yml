@@ -55,8 +55,8 @@ jobs:
         run: |
           terraform apply -auto-approve
         env:
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
       - name: Get AKS credentials
         run: az aks get-credentials --resource-group pipeline --name my-aks-cluster
