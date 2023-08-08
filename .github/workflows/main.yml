@@ -1,0 +1,52 @@
+name: Next.js App Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js app
+        run: npm run build
+
+      - name: Set up Azure CLI
+        uses: azure/setup-az-cli@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Log in to Azure Container Registry
+        run: az acr login --name YOUR_ACR_NAME
+
+      - name: Build and tag Docker image
+        run: |
+          docker build -t YOUR_ACR_NAME.azurecr.io/my-nextjs-app:${{ github.sha }} .
+          docker push YOUR_ACR_NAME.azurecr.io/my-nextjs-app:${{ github.sha }}
+
+      - name: Terraform Init
+        run: cd terraform && terraform init
+
+      - name: Terraform Apply
+        run: |
+          cd terraform
+          terraform apply -auto-approve
+
+      - name: Get AKS credentials
+        run: az aks get-credentials --resource-group YOUR_RESOURCE_GROUP --name YOUR_AKS_NAME
+
+      - name: Deploy to AKS
+        run: kubectl apply -f k8s-deployment.yaml
