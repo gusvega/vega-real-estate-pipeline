@@ -39,9 +39,14 @@ jobs:
           docker build -t pipelinegusccr.azurecr.io/my-nextjs-app:${{ github.sha }} .
           docker push pipelinegusccr.azurecr.io/my-nextjs-app:${{ github.sha }}
 
-      - uses: hashicorp/setup-terraform@v2
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.5.4
+
+      - name: Current location
+        run: |
+          ls -la
 
       - name: Terraform Init
         run: terraform init
