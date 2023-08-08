@@ -53,11 +53,10 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          cd terraform
           terraform apply -auto-approve
 
       - name: Get AKS credentials
-        run: az aks get-credentials --resource-group YOUR_RESOURCE_GROUP --name YOUR_AKS_NAME
+        run: az aks get-credentials --resource-group pipeline --name my-aks-cluster
 
       - name: Deploy to AKS
         run: kubectl apply -f k8s-deployment.yaml
