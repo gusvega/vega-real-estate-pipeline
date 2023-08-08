@@ -24,6 +24,9 @@ jobs:
       - name: Build Next.js app
         run: yarn build
 
+      - name: Install AZ CLI
+        uses: elstudio/action-install-azure-cli@v1
+
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
