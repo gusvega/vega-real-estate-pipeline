@@ -2,10 +2,13 @@ provider "azurerm" {
   features {}
 }
 
+variable "azure_client_id" {}
+variable "azure_client_secret" {}
+
 resource "azurerm_kubernetes_cluster" "production" {
   name                = "my-aks-cluster"
-  location            = "westus"  # Specify the correct location for your existing resource group
-  resource_group_name = "pipeline"  # Specify the name of your existing resource group
+  location            = "westus"
+  resource_group_name = "pipeline"
   dns_prefix          = "my-aks-cluster"
 
   default_node_pool {
@@ -15,8 +18,8 @@ resource "azurerm_kubernetes_cluster" "production" {
   }
 
   service_principal {
-    client_id     = process.env.AZURE_CLIENT_ID
-    client_secret = process.env.AZURE_CLIENT_SECRET
+    client_id     = var.azure_client_id
+    client_secret = var.azure_client_secret
   }
 
   tags = {
