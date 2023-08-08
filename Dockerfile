@@ -1,5 +1,8 @@
 # Use an official Node.js runtime as the base image
-FROM node:14-alpine
+# FROM node:14-alpine
+FROM alpine:3.18
+
+ENV NODE_VERSION 18.0.0
 
 # Set the working directory in the container
 WORKDIR /app
