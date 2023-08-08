@@ -10,6 +10,12 @@ WORKDIR /app
 # Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
 
+# Set Yarn version
+ENV YARN_VERSION 1.22.19
+
+# Install Yarn
+RUN apk add --no-cache yarn=${YARN_VERSION}-r0
+
 # Install app dependencies
 RUN yarn install
 
