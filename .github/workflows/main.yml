@@ -101,9 +101,9 @@ jobs:
           helm upgrade --install my-nextjs-app . \
             --set image.tag=${{ github.sha }}
 
-      - name: Current location
+      - name: List of largest
         run: |
-          ls -la
+          du -h --max-depth=1 | sort -hr | head -n 10
 
       - name: Wait for deployment to finish
         run: |
