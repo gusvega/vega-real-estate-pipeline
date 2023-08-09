@@ -60,8 +60,13 @@ jobs:
           TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
           TF_VAR_azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
-      - name: Get AKS credentials
-        run: az aks get-credentials --resource-group pipeline --name my-aks-cluster
+      - name: Get AKS Cluster Info
+        run: |
+          az aks get-credentials --resource-group pipeline --name my-aks-cluster
+          kubectl config view --minify --raw
+
+      - name: Print AKS Cluster Info
+        run: cat $HOME/.kube/config
 
       - name: Deploy to AKS
-        run: kubectl apply -f k8s-deployment.yaml
+        run: kubectl apply -f deployment.yaml
