@@ -1,26 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-nextjs-app
+  name: {{ include "my-nextjs-app.fullname" . }}
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: my-nextjs-app
+      app: {{ include "my-nextjs-app.name" . }}
   template:
     metadata:
       labels:
-        app: my-nextjs-app
+        app: {{ include "my-nextjs-app.name" . }}
     spec:
       containers:
-        - name: my-nextjs-app
+        - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
-            - containerPort: 3000
-          resources:
-            limits:
-              cpu: "0.5"
-              memory: "512Mi"
-            requests:
-              cpu: "0.2"
-              memory: "256Mi"
+            - containerPort: 80
