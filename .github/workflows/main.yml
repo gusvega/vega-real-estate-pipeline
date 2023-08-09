@@ -95,6 +95,10 @@ jobs:
       - name: List of largest
         run: |
           du -h --max-depth=1 | sort -hr | head -n 10
+          
+      - name: Current Path
+        run: |
+          pwd
 
       - name: Deploy with Helm
         run: |
