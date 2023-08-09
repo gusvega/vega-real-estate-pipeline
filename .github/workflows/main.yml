@@ -88,6 +88,10 @@ jobs:
         run: |
           rm terraform.tfstate
 
+      - name: List of largest
+        run: |
+          du -h --max-depth=1 | sort -hr | head -n 10
+
       - name: Deploy with Helm
         run: |
           helm upgrade --install my-nextjs-app . \
