@@ -102,9 +102,7 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          helm upgrade --install my-nextjs-app . \
-            --set image.repository=pipelinegusccr.azurecr.io/my-nextjs-app \
-            --set image.tag=${{ github.sha }}
+          helm upgrade --install my-nextjs-app .
 
       - name: List of largest
         run: |
