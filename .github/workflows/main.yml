@@ -51,16 +51,14 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Set Terraform Secrets
-        run: |
-          echo "AZURE_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "AZURE_CLIENT_SECRET=${{ secrets.AZURE_CLIENT_SECRET }}" >> $GITHUB_ENV
-
       - name: Terraform Init
         run: terraform init
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        env:
+          TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
       - name: Get AKS credentials
         run: az aks get-credentials --resource-group pipeline --name my-aks-cluster
