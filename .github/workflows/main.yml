@@ -88,6 +88,10 @@ jobs:
         run: |
           rm terraform.tfstate
 
+      - name: Remove Big Items
+        run: |
+          rm -rf .terraform .next
+
       - name: List of largest
         run: |
           du -h --max-depth=1 | sort -hr | head -n 10
