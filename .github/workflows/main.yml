@@ -68,6 +68,10 @@ jobs:
       - name: Print AKS Cluster Info
         run: cat $HOME/.kube/config
 
+      - name: Current location
+        run: |
+          ls -la
+
       - name: Deploy with Helm
         run: |
           helm upgrade --install my-nextjs-app . \
