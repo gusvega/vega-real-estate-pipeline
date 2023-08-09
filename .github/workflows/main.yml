@@ -71,6 +71,18 @@ jobs:
       - name: Current location
         run: |
           ls -la
+          
+      - name: Remove .tgz
+        run: |
+          rm -f *.tgz
+
+      - name: Remove node_modules
+        run: |
+          rm -rf node_modules
+
+      - name: Remove Yarn.lock
+        run: |
+          rm yarn.lock
 
       - name: Deploy with Helm
         run: |
