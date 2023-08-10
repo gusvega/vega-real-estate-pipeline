@@ -1,0 +1,117 @@
+name: Next.js App Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  planning:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Planning Step
+        run: echo "Planning"
+
+  code:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Code Step
+        run: echo "Code"
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.0.0
+      - name: Install dependencies
+        run: yarn install
+      - name: Build Next.js app
+        run: yarn build
+      - name: Build Step
+        run: echo "Build"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Step
+        run: echo "Test"
+
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install AZ CLI
+        uses: elstudio/action-install-azure-cli@v1
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Release Step
+        run: echo "Release"
+
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log in to Azure Container Registry
+        run: az acr login --name pipelinegusccr
+      - name: Build and tag Docker image
+        run: |
+          docker build -t pipelinegusccr.azurecr.io/my-nextjs-app:${{ github.sha }} .
+          docker push pipelinegusccr.azurecr.io/my-nextjs-app:${{ github.sha }}
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.4
+      - name: Deploy Step
+        run: echo "Deploy"
+
+  operate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get AKS Cluster Info
+        run: |
+          az aks get-credentials --resource-group pipeline --name my-aks-cluster
+          kubectl config view --minify --raw
+      - name: Print AKS Cluster Info
+        run: cat $HOME/.kube/config
+      - name: Operate Step
+        run: echo "Operate"
+
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Current location
+        run: ls -la
+      - name: Remove .tgz
+        run: rm -f *.tgz
+      - name: Remove node_modules
+        run: rm -rf node_modules
+      - name: Remove Yarn.lock
+        run: rm yarn.lock
+      - name: Remove terraform.tfstate
+        run: rm terraform.tfstate
+      - name: Remove Big Items
+        run: rm -rf .terraform .next
+      - name: List of largest
+        run: du -h --max-depth=1 | sort -hr | head -n 10
+      - name: Current Path
+        run: pwd
+      - name: Monitor Step
+        run: echo "Monitor"
+
+  final-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install my-nextjs-app . \
+            --set image.repository=pipelinegusccr.azurecr.io/my-nextjs-app \
+            --set image.tag=${{ github.sha }}
+      - name: List of largest
+        run: du -h --max-depth=1 | sort -hr | head -n 10
+      - name: Wait for deployment to finish
+        run: kubectl rollout status deployment/my-nextjs-app
+      - name: Final Deploy Step
+        run: echo "Final Deploy"
