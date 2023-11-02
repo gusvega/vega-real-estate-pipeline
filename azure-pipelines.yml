@@ -43,7 +43,7 @@ jobs:
   - script: echo "Test"
 
 - job: Release
-    displayName: Release Step
+    displayName: Release step
     pool:
       vmImage: ubuntu-latest
     steps:
