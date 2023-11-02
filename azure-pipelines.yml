@@ -43,16 +43,19 @@ jobs:
   - script: echo "Test"
 
 - job: Release
-  displayName: Release Step
-  pool:
-    vmImage: ubuntu-latest
-  steps:
-  - task: UseAzureCLI@2
-    inputs:
-      azureSubscription: '<your-azure-subscription>'
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: echo "Release"
+    displayName: Release Step
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - uses: azure/login@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+    - task: UseAzureCLI@2
+      inputs:
+        azureSubscription: '<your-azure-subscription>'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: echo "Release"
 
 - job: Deploy
   displayName: Deploy Step
