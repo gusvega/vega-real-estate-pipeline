@@ -606,7 +606,6 @@ export default function Page({ params }: { params: { id: string } }) {
                     <dd className="text-xs font-medium leading-6 text-gray-900">${data.analyses.properties[params.id]?.calculations?.cashFlowPerYear}</dd>
                   </div>
                 </dl>
-
               </div>
             </div>
 
@@ -622,7 +621,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     </div>
                   </div>
                 ))}
-
+{/* l */}
               <div className="border-b border-gray-200 text-gray-900 flex justify-between">
                 <div className="py-3 pl-8 pr-0 font-semibold ">
                   Month
