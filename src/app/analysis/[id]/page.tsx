@@ -368,13 +368,13 @@ export default function Page({ params }: { params: { id: string } }) {
                 <div className="px-4 sm:px-0">
                   <h3 className="text-base font-semibold leading-7 text-gray-900">Initial Investment Information</h3>
                 </div>
-                <button type="button" onClick={(e) => handleClick()} className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">
+                <button type="button" className="rounded-md bg-white font-medium text-indigo-600 hover:text-indigo-500">
                   {update ? 'Save' : 'Update'}
                 </button>
                 <div className="mt-6 border-t border-gray-100">
                   <dl className="divide-y divide-gray-100">
                     {Object.entries(data.analyses.properties[params.id]?.values.purchase).map(([key, value]) => (
-                      <>
+                      < div key={key}>
                         <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                           <dt className="text-sm font-medium leading-6 text-gray-900">{formatString(key)}</dt>
                           <dd className="mt-1 flex text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
@@ -383,7 +383,7 @@ export default function Page({ params }: { params: { id: string } }) {
                               {update ? (
                                 <input
                                   type="text"
-                                 onChange={(e) => handleUpdateData(key)}
+                                
                                   defaultValue={value ? value.toString() : ''}
                                 />
                               ) : (
@@ -395,7 +395,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             </span>
                           </dd>
                         </div>
-                      </>
+                      </div>
                     ))}
                     <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                       <dt className="text-lg font-medium leading-6 text-gray-900">Total Investment</dt>
@@ -615,7 +615,7 @@ export default function Page({ params }: { params: { id: string } }) {
               {Object.entries(data.analyses.properties[params.id]?.calculations)
                 .filter(([key, value]) => key === 'downPaymentAmount' || key === 'estimatedClosingCostAmount' || key === 'totalInvestment' || key === 'capRatePercentage' || key === 'cashOnCashReturn')
                 .map(([key, value]) => (
-                  <div className=" py-1 flex justify-between mx-2">
+                  <div key={key} className=" py-1 flex justify-between mx-2">
                     <div className="text-xs font-medium leading-6 text-gray-900">{formatString(key)}</div>
                     <div className=" flex text-xs leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                       <span className="flex-grow">${value as string}</span>
