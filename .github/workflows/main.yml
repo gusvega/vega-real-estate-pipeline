@@ -88,7 +88,7 @@ jobs:
 
       - name: Get AKS Cluster Info
         run: |
-          az aks get-credentials --resource-group pipeline --name my-aks-cluster
+          az aks get-credentials --resource-group vega_real_estate --name real-estate-cluster
           kubectl config view --minify --raw
 
       - name: Print AKS Cluster Info
