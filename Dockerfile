@@ -16,7 +16,7 @@ ENV YARN_VERSION 1.22.19
 # Install Yarn
 RUN apk add --no-cache yarn=${YARN_VERSION}-r0
 
-# Install app dependencies
+#Install app dependencies
 RUN yarn install
 
 # Copy the app source code to the container
