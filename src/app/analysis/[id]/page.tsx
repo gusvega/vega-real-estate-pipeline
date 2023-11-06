@@ -621,7 +621,6 @@ export default function Page({ params }: { params: { id: string } }) {
                     </div>
                   </div>
                 ))}
-{/* l */}
               <div className="border-b border-gray-200 text-gray-900 flex justify-between">
                 <div className="py-3 pl-8 pr-0 font-semibold ">
                   Month
