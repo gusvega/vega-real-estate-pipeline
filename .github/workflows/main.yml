@@ -53,7 +53,16 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t vegarealestatecr.azurecr.io/vega-real-estate-app:${{ github.sha }} .
+          docker build \
+            --build-arg NEXT_PUBLIC_APIKEY=$NEXT_PUBLIC_APIKEY \
+            --build-arg NEXT_PUBLIC_AUTHDOMAIN=$NEXT_PUBLIC_AUTHDOMAIN \
+            --build-arg NEXT_PUBLIC_PROJECTID=$NEXT_PUBLIC_PROJECTID \
+            --build-arg NEXT_PUBLIC_STORAGEBUCKET=$NEXT_PUBLIC_STORAGEBUCKET \
+            --build-arg NEXT_PUBLIC_MESSAGINGSENDERID=$NEXT_PUBLIC_MESSAGINGSENDERID \
+            --build-arg NEXT_PUBLIC_APPID=$NEXT_PUBLIC_APPID \
+            --build-arg NEXT_PUBLIC_MEASUREMENTID=$NEXT_PUBLIC_MEASUREMENTID \
+            --build-arg NEXT_PUBLIC_DATABASE_URL=$NEXT_PUBLIC_DATABASE_URL \
+            -t vegarealestatecr.azurecr.io/vega-real-estate-app:${{ github.sha }} .
           docker push vegarealestatecr.azurecr.io/vega-real-estate-app:${{ github.sha }}
 
       - name: Install Terraform
