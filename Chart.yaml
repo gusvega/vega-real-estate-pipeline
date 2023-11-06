@@ -1,5 +1,0 @@
-apiVersion: v2
-name: my-nextjs-app
-description: Helm chart for deploying a containerized Next.js app
-version: 0.1.0
-appVersion: 1.0.0

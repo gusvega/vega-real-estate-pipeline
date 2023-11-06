@@ -1,7 +1,0 @@
-image:
-  repository: pipelinegusccr.azurecr.io/my-nextjs-app
-  tag: latest
-
-service:
-  type: LoadBalancer
-  port: 80

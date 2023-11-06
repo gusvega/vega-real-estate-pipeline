@@ -1,7 +1,7 @@
-# Use an official Node.js runtime as the base image
-# FROM node:14-alpine
+#runtime as the base image
 FROM alpine:3.18
 
+# Node version
 ENV NODE_VERSION 18.0.0
 
 # Set the working directory in the container
@@ -25,8 +25,8 @@ COPY . .
 # Build the React app for production
 RUN yarn build
 
-# Expose the desired port (e.g., 80)
+# Expose the desired port
 EXPOSE 80
 
-# Start the app
+# Start app
 CMD ["yarn", "start"]
