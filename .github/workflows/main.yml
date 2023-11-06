@@ -128,7 +128,7 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          helm upgrade --install my-nextjs-app .
+          helm upgrade --install vega-real-estate-app .
 
       - name: List of largest
         run: |
