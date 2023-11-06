@@ -40,9 +40,13 @@ jobs:
       - name: Install AZ CLI
         uses: elstudio/action-install-azure-cli@v1
 
-      - uses: azure/login@v1
+      - name: Azure Login
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: List Azure subscriptions
+        run: az account list
           
       - name: Log in to Azure Container Registry
         run: az acr login --name pipelinegusccr
