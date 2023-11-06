@@ -5,6 +5,18 @@ on:
     branches:
       - main
 
+env:
+  NEXT_PUBLIC_APIKEY: ${{ secrets.NEXT_PUBLIC_APIKEY }}
+  NEXT_PUBLIC_AUTHDOMAIN: ${{ secrets.NEXT_PUBLIC_AUTHDOMAIN }}
+  NEXT_PUBLIC_PROJECTID: ${{ secrets.NEXT_PUBLIC_PROJECTID }}
+  NEXT_PUBLIC_STORAGEBUCKET: ${{ secrets.NEXT_PUBLIC_STORAGEBUCKET }}
+  NEXT_PUBLIC_MESSAGINGSENDERID: ${{ secrets.NEXT_PUBLIC_MESSAGINGSENDERID }}
+  NEXT_PUBLIC_APPID: ${{ secrets.NEXT_PUBLIC_APPID }}
+  NEXT_PUBLIC_MEASUREMENTID: ${{ secrets.NEXT_PUBLIC_MEASUREMENTID }}
+  NEXT_PUBLIC_DATABASE_URL: ${{ secrets.NEXT_PUBLIC_DATABASE_URL }}
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
@@ -21,23 +33,28 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
+
       - name: Build Next.js app
         run: yarn build
 
       - name: Install AZ CLI
         uses: elstudio/action-install-azure-cli@v1
 
-      - uses: azure/login@v1
+      - name: Azure Login
+        uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: List Azure subscriptions
+        run: az account list
           
       - name: Log in to Azure Container Registry
-        run: az acr login --name pipelinegusccr
+        run: az acr login --name vegarealestatecr
 
       - name: Build and tag Docker image
         run: |
-          docker build -t pipelinegusccr.azurecr.io/my-nextjs-app:${{ github.sha }} .
-          docker push pipelinegusccr.azurecr.io/my-nextjs-app:${{ github.sha }}
+          docker build -t vegarealestatecr.azurecr.io/vega-real-estate-app:${{ github.sha }} .
+          docker push vegarealestatecr.azurecr.io/vega-real-estate-app:${{ github.sha }}
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
