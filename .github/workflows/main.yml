@@ -62,8 +62,8 @@ jobs:
             --build-arg NEXT_PUBLIC_APPID=$NEXT_PUBLIC_APPID \
             --build-arg NEXT_PUBLIC_MEASUREMENTID=$NEXT_PUBLIC_MEASUREMENTID \
             --build-arg NEXT_PUBLIC_DATABASE_URL=$NEXT_PUBLIC_DATABASE_URL \
-            -t vegarealestatecr.azurecr.io/vega-real-estate-app:${{ github.sha }} .
-          docker push vegarealestatecr.azurecr.io/vega-real-estate-app:${{ github.sha }}
+            -t vegarealestatecr.azurecr.io/vega-real-estate-app:latest .
+          docker push vegarealestatecr.azurecr.io/vega-real-estate-app:latest
 
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
