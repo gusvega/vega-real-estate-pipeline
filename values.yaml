@@ -1,0 +1,7 @@
+image:
+  repository: vegarealestatecr.azurecr.io/vega-real-estate-app
+  tag: latest
+
+service:
+  type: LoadBalancer
+  port: 80
