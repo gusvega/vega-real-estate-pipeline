@@ -67,10 +67,6 @@ jobs:
       - name: Log in to Azure Container Registry
         run: az acr login --name vegarealestatecr
 
-      - name: Current location
-        run: |
-          ls
-
       - name: Build and tag Docker image
         run: |
           docker build \
