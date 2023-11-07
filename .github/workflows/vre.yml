@@ -1,0 +1,163 @@
+name: Vega Real Estate Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  NEXT_PUBLIC_APIKEY: ${{ secrets.NEXT_PUBLIC_APIKEY }}
+  NEXT_PUBLIC_AUTHDOMAIN: ${{ secrets.NEXT_PUBLIC_AUTHDOMAIN }}
+  NEXT_PUBLIC_PROJECTID: ${{ secrets.NEXT_PUBLIC_PROJECTID }}
+  NEXT_PUBLIC_STORAGEBUCKET: ${{ secrets.NEXT_PUBLIC_STORAGEBUCKET }}
+  NEXT_PUBLIC_MESSAGINGSENDERID: ${{ secrets.NEXT_PUBLIC_MESSAGINGSENDERID }}
+  NEXT_PUBLIC_APPID: ${{ secrets.NEXT_PUBLIC_APPID }}
+  NEXT_PUBLIC_MEASUREMENTID: ${{ secrets.NEXT_PUBLIC_MEASUREMENTID }}
+  NEXT_PUBLIC_DATABASE_URL: ${{ secrets.NEXT_PUBLIC_DATABASE_URL }}
+  AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.0.0
+
+      - name: Install dependencies
+        run: yarn install
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test Application
+        run: echo Testing
+
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Release Application
+        run: echo Releasing
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install AZ CLI
+        uses: elstudio/action-install-azure-cli@v1
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: List Azure subscriptions
+        run: az account list
+          
+      - name: Log in to Azure Container Registry
+        run: az acr login --name vegarealestatecr
+
+      - name: Build and tag Docker image
+        run: |
+          docker build \
+            --build-arg NEXT_PUBLIC_APIKEY=$NEXT_PUBLIC_APIKEY \
+            --build-arg NEXT_PUBLIC_AUTHDOMAIN=$NEXT_PUBLIC_AUTHDOMAIN \
+            --build-arg NEXT_PUBLIC_PROJECTID=$NEXT_PUBLIC_PROJECTID \
+            --build-arg NEXT_PUBLIC_STORAGEBUCKET=$NEXT_PUBLIC_STORAGEBUCKET \
+            --build-arg NEXT_PUBLIC_MESSAGINGSENDERID=$NEXT_PUBLIC_MESSAGINGSENDERID \
+            --build-arg NEXT_PUBLIC_APPID=$NEXT_PUBLIC_APPID \
+            --build-arg NEXT_PUBLIC_MEASUREMENTID=$NEXT_PUBLIC_MEASUREMENTID \
+            --build-arg NEXT_PUBLIC_DATABASE_URL=$NEXT_PUBLIC_DATABASE_URL \
+            -t vegarealestatecr.azurecr.io/vega-real-estate-app:latest .
+          docker push vegarealestatecr.azurecr.io/vega-real-estate-app:latest
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.4
+
+      - name: Current location
+        run: |
+          ls -la
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        env:
+          TF_VAR_azure_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+          TF_VAR_azure_client_secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+      - name: Get AKS Cluster Info
+        run: |
+          az aks get-credentials --resource-group vega_real_estate --name real-estate-cluster
+          kubectl config view --minify --raw
+
+      - name: Print AKS Cluster Info
+        run: cat $HOME/.kube/config
+
+      - name: Current location
+        run: |
+          ls -la
+          
+      - name: Remove .tgz
+        run: |
+          rm -f *.tgz
+
+      - name: Remove node_modules
+        run: |
+          rm -rf node_modules
+
+      - name: Remove Yarn.lock
+        run: |
+          rm yarn.lock
+
+      - name: Remove terraform.tfstate
+        run: |
+          rm terraform.tfstate
+
+      - name: Remove Big Items
+        run: |
+          rm -rf .terraform .next
+
+      - name: List of largest
+        run: |
+          du -h --max-depth=1 | sort -hr | head -n 10
+          
+      - name: Current Path
+        run: |
+          pwd
+
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install vega-real-estate-app .
+
+      - name: List of largest
+        run: |
+          du -h --max-depth=1 | sort -hr | head -n 10
+
+      - name: Wait for deployment to finish
+        run: |
+          kubectl rollout status deployment/vega-real-estate-app
+
+  operate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Operate Application
+        run: echo Operating
+        
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Monitor Application
+        run: echo Monitoring
