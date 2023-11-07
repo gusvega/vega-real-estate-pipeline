@@ -1,7 +1,7 @@
 #runtime as the base image
 FROM alpine:3.18
 
-# Variable
+# Variables
 ARG NEXT_PUBLIC_APIKEY
 ARG NEXT_PUBLIC_AUTHDOMAIN
 ARG NEXT_PUBLIC_PROJECTID
@@ -45,7 +45,7 @@ COPY . .
 RUN yarn build
 
 # Expose the desired port
-EXPOSE 80
+EXPOSE 3000
 
 # Start app
 CMD ["yarn", "start"]

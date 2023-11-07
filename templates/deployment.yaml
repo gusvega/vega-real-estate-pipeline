@@ -16,7 +16,7 @@ spec:
         - name: vega-real-estate-app
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
-            - containerPort: 80
+            - containerPort: 3000
           resources:
             limits:
               cpu: "0.5"
