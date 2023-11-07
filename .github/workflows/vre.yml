@@ -69,7 +69,8 @@ jobs:
 
       - name: Current location
         run: |
-          ls -la
+          pwd
+          ls
 
       - name: Build and tag Docker image
         run: |
