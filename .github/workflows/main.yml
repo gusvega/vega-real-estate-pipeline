@@ -18,8 +18,18 @@ env:
 
 
 jobs:
+  timestamp:
+    runs-on: ubuntu-latest
+    outputs:
+      step_time: ${{ steps.set_time.outputs.time }}
+    steps:
+      - name: Set Time
+        id: set_time
+        run: echo "time=$(TZ=America/Denver date +'%Y-%m-%d')" >> $GITHUB_ENV
+      
   build_and_deploy:
     runs-on: ubuntu-latest
+    needs: timestamp
 
     steps:
       - name: Checkout code
