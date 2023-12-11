@@ -28,6 +28,8 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 18.0.0
+          echo: |
+            echo "TESTING ECHO!!!!!!!!!!!!!!"
 
       - name: Install dependencies
         run: yarn install
