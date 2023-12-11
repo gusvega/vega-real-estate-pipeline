@@ -30,6 +30,8 @@ jobs:
           node-version: 18.0.0
           echo: |
             echo "TESTING ECHO!!!!!!!!!!!!!!"
+        run: |
+          echo 'WWWWWWWWWWWWWWWWWWWW'
 
       - name: Install dependencies
         run: yarn install
