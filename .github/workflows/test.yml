@@ -1,4 +1,4 @@
-name: Simple Workflow
+name: Timestamped Workflow
 
 on:
   push:
@@ -6,26 +6,25 @@ on:
       - '*'
 
 jobs:
-  simple_job:
+  timestamped_job:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Print a message
-      run: echo "Hello, this is a simple GitHub Actions workflow!"
+    - name: Display Current Time
+      run: |
+        echo "Current time: $(date +"%T")"
 
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Run Python Script
+    - name: Setup Python and Display Time
       uses: actions/setup-python@v2
       with:
         python-version: '3.8'
-        echo: |
-          echo 'TESTING'
-
-    - name: Execute Python Script
       run: |
+        echo "Python setup complete at $(date +"%T")"
+
+    - name: Execute Python Script and Display Time
+      run: |
+        echo "Executing Python script at $(date +"%T")"
         python -c "print('Hello from the Python script!')"
