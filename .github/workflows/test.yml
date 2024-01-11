@@ -18,7 +18,7 @@ jobs:
         env:
           GH_TOKEN: ${{secrets.GH_TOKEN}}
         run: |
-          PR_AUTHOR=$(gh pr view ${{ github.event.number }} --json author.login -q .author.login)
+          PR_AUTHOR=$(gh pr view ${{ github.event.number }} --json author.login)
           echo "Pull request author: $PR_AUTHOR"
 
       - name: Check author login
