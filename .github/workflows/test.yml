@@ -1,30 +1,32 @@
-name: Timestamped Workflow
+name: Check Author on Pull Request
 
 on:
-  push:
-    branches:
-      - '*'
+  pull_request:
+    types:
+      - opened
+      - synchronize
 
 jobs:
-  timestamped_job:
+  check-author:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Display Current Time
-      run: |
-        echo "Current time: $(date +"%T")"
+      - name: Get pull request author
+        env:
+          GH_TOKEN: ${{secrets.GH_TOKEN}}
+        run: |
+          PR_AUTHOR=$(gh pr view ${{ github.event.number }} --json author.login -q .author.login)
+          echo "Pull request author: $PR_AUTHOR"
 
-    - name: Setup Python and Display Time
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.8'
-      run: |
-        echo "Python setup complete at $(date +"%T")"
+      - name: Check author login
+        run: |
+          if [ "$PR_AUTHOR" == "gusvega" ]; then
+            PR_NUMBER=$(gh pr view ${{ github.event.number }} --json number -q .number)
+            echo "Pull request number: $PR_NUMBER"
+          else
+            echo "Author is not gusvega. Skipping further actions."
+          fi
 
-    - name: Execute Python Script and Display Time
-      run: |
-        echo "Executing Python script at $(date +"%T")"
-        python -c "print('Hello from the Python script!')"
