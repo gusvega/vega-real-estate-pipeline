@@ -18,7 +18,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PR_INFO=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.number }} --json user.login,number -q '.[]')
+          PR_INFO=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.number }} --json user.login,number)
           PR_AUTHOR=$(echo "$PR_INFO" | jq -r '.user.login')
           PR_NUMBER=$(echo "$PR_INFO" | jq -r '.number')
 
