@@ -14,19 +14,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get pull request author
+      - name: Get pull request author and number
         env:
-          GH_TOKEN: ${{secrets.GH_TOKEN}}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PR_AUTHOR=$(gh pr view ${{ github.event.number }} --json author)
-          echo "Pull request author: $PR_AUTHOR"
+          PR_INFO=$(gh api repos/${{ github.repository }}/pulls/${{ github.event.number }} --json user.login,number -q '.[]')
+          PR_AUTHOR=$(echo "$PR_INFO" | jq -r '.user.login')
+          PR_NUMBER=$(echo "$PR_INFO" | jq -r '.number')
 
-      - name: Check author login
-        run: |
           if [ "$PR_AUTHOR" == "gusvega" ]; then
-            PR_NUMBER=$(gh pr view ${{ github.event.number }} --json number -q .number)
+            echo "Pull request author: $PR_AUTHOR"
             echo "Pull request number: $PR_NUMBER"
           else
             echo "Author is not gusvega. Skipping further actions."
           fi
-
