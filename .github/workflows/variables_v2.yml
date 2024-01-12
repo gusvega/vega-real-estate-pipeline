@@ -27,4 +27,4 @@ jobs:
         run: |
           echo "VAR1 is $VAR1"
           echo "VAR2 is $VAR2"
-          run: echo "The selected color is $SELECTED_COLOR"
+          echo "The selected color is $SELECTED_COLOR"
