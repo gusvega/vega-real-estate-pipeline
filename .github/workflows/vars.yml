@@ -1,0 +1,29 @@
+name: Variable Workflow
+
+on:
+  workflow_dispatch: # This allows the workflow to be triggered manually from the Actions tab
+
+jobs:
+  set-variables:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set Variables
+        id: set-variables
+        run: |
+          echo "VAR1=value1" >> $GITHUB_ENV
+          echo "VAR2=value2" >> $GITHUB_ENV
+        shell: bash
+
+  read-variables:
+    needs: set-variables
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Read Variables
+        run: |
+          echo "VAR1 is $VAR1"
+          echo "VAR2 is $VAR2"
+        env:
+          VAR1: ${{ secrets.VAR1 }}
+          VAR2: ${{ secrets.VAR2 }}
