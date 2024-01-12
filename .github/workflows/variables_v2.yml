@@ -15,13 +15,16 @@ jobs:
           echo "VAR2=value2" >> $GITHUB_ENV
           echo "VAR1=value1" >> $GITHUB_STATE
           echo "VAR2=value2" >> $GITHUB_STATE
+          echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
 
   read-variables:
     needs: set-variables
     runs-on: ubuntu-latest
-
     steps:
       - name: Read Variables
+        env:
+            SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }} 
         run: |
           echo "VAR1 is $VAR1"
           echo "VAR2 is $VAR2"
+          run: echo "The selected color is $SELECTED_COLOR"
