@@ -7,13 +7,18 @@ jobs:
   set-variables:
     runs-on: ubuntu-latest
 
+    outputs:
+      VAR1: ${{ steps.set-vars.outputs.VAR1 }}
+      VAR2: ${{ steps.set-vars.outputs.VAR2 }}
+
     steps:
       - name: Set Variables
-        id: set-variables
+        id: set-vars
         run: |
-          echo "VAR1=value1" >> $GITHUB_ENV
-          echo "VAR2=value2" >> $GITHUB_ENV
-        shell: bash
+          echo "VAR1=value1"
+          echo "VAR2=value2"
+          echo "::set-output name=VAR1::value1"
+          echo "::set-output name=VAR2::value2"
 
   read-variables:
     needs: set-variables
@@ -22,8 +27,5 @@ jobs:
     steps:
       - name: Read Variables
         run: |
-          echo "VAR1 is $VAR1"
-          echo "VAR2 is $VAR2"
-        env:
-          VAR1: ${{ secrets.VAR1 }}
-          VAR2: ${{ secrets.VAR2 }}
+          echo "VAR1 is ${{ needs.set-variables.outputs.VAR1 }}"
+          echo "VAR2 is ${{ needs.set-variables.outputs.VAR2 }}"
